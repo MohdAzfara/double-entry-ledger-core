@@ -1,0 +1,24 @@
+{
+  "name": "double-entry-ledger-core",
+  "version": "1.0.0",
+  "description": "Immutable double-entry accounting ledger engine enforcing ACID balance invariants and audit trails.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "fintech",
+    "ledger",
+    "accounting",
+    "double-entry",
+    "acid",
+    "typescript"
+  ],
+  "author": "Mohd Azfar",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}
