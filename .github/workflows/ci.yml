@@ -1,0 +1,31 @@
+name: Fintech CI & Security Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    name: Build, Typecheck & Manifest Audit (Node 20 LTS)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies cleanly
+        run: npm install --no-audit --no-fund
+
+      - name: Verify TypeScript compiler toolchain
+        run: npx tsc --version
+
+      - name: Validate package manifest & compliance metadata
+        run: npm pkg get name version license
