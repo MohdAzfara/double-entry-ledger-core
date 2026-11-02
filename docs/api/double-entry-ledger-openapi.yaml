@@ -1,0 +1,69 @@
+openapi: 3.1.0
+info:
+  title: Double-Entry Ledger Core API
+  version: 1.0.0
+  description: Immutable ACID double-entry accounting journal, hash-chain verification, and trial balance snapshot API.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /v1/journal-entries:
+    post:
+      summary: Post an atomic, zero-sum double-entry journal batch
+      operationId: postJournalBatch
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - correlationId
+                - sourceService
+                - currency
+                - lines
+              properties:
+                correlationId:
+                  type: string
+                  example: "chk_capture_99182"
+                sourceService:
+                  type: string
+                  enum: ["checkout-flow-sdk", "payout-gateway-service", "automated-refund-worker"]
+                currency:
+                  type: string
+                  enum: ["USD", "EUR", "GBP", "SGD"]
+                lines:
+                  type: array
+                  minItems: 2
+                  items:
+                    type: object
+                    required:
+                      - accountId
+                      - direction
+                      - amountMinor
+                    properties:
+                      accountId:
+                        type: string
+                        example: "acct_platform_cash_usd"
+                      direction:
+                        type: string
+                        enum: ["DEBIT", "CREDIT"]
+                      amountMinor:
+                        type: integer
+                        minimum: 1
+                        example: 250000
+      responses:
+        "201":
+          description: Journal batch committed, zero-sum verified, and sealed into cryptographic hash chain.
+        "409":
+          description: Idempotency-Key payload conflict or optimistic concurrency version mismatch.
+        "422":
+          description: Unbalanced journal lines (Debits != Credits) or normal-balance overdraft violation.
