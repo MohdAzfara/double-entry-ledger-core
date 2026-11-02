@@ -1,0 +1,8 @@
+# Default owners for everything in the repository
+*       @MohdAzfara
+
+# Critical Accounting Invariants, Cryptographic Sealing & CI Workflows
+/src/                   @MohdAzfara
+/docs/threat-model.md   @MohdAzfara
+/SECURITY.md            @MohdAzfara
+/.github/workflows/     @MohdAzfara
